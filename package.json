@@ -1,0 +1,33 @@
+{
+  "name": "@plumejs/forms",
+  "version": "1.0.0",
+  "description": "A dependency free forms library",
+  "files": [
+    "dist/**/*"
+  ],
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "vite build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KiranMantha/plumejs-forms.git"
+  },
+  "keywords": [
+    "forms",
+    "plumejs"
+  ],
+  "author": "KiranMantha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KiranMantha/plumejs-forms/issues"
+  },
+  "homepage": "https://github.com/KiranMantha/plumejs-forms#readme",
+  "devDependencies": {
+    "vite": "^5.0.2"
+  }
+}
