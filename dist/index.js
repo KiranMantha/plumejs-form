@@ -10,10 +10,10 @@ const c = (r) => {
       break;
     }
     case "select": {
-      const t = r.type === "select-one", n = [...Array.from(r.options)].filter((o) => o.selected).map(
-        (o) => o.value ?? (o.textContent.match(/[^\x20\t\r\n\f]+/g) || []).join(" ")
+      const t = r.type === "select-one", o = [...Array.from(r.options)].filter((n) => n.selected).map(
+        (n) => n.value ?? (n.textContent.match(/[^\x20\t\r\n\f]+/g) || []).join(" ")
       );
-      e = t ? n[0] : n;
+      e = t ? o[0] : o;
       break;
     }
     default: {
@@ -39,12 +39,13 @@ class h {
     l(this, "_errors", /* @__PURE__ */ new Map());
     this._initialValues = e;
     for (const [t, s] of Object.entries(e)) {
-      const n = [...Array.isArray(s) ? s : [s]];
+      const o = [...Array.isArray(s) ? s : [s]];
       this._controls[t] = {
-        value: n[0],
-        validators: n.length > 1 ? n[1] : []
+        value: o[0],
+        validators: o.length > 1 ? o[1] : []
       };
     }
+    this.changeHandler = this.changeHandler.bind(this), this.getControl = this.getControl.bind(this), this.reset = this.reset.bind(this);
   }
   /**
    * @type Map
@@ -91,17 +92,17 @@ class h {
     for (const e in this._controls) {
       const t = this._controls[e].value, s = this._controls[e].validators;
       this._controls[e].errors = null;
-      for (const n of s) {
-        const o = n(t);
-        o !== null && (this._errors.has(e) ? (this._errors.set(e, { ...this._errors.get(e), ...o }), this._controls[e].errors = {
+      for (const o of s) {
+        const n = o(t);
+        n !== null && (this._errors.has(e) ? (this._errors.set(e, { ...this._errors.get(e), ...n }), this._controls[e].errors = {
           ...this._controls[e].errors,
-          ...o
-        }) : (this._errors.set(e, o), this._controls[e].errors = o));
+          ...n
+        }) : (this._errors.set(e, n), this._controls[e].errors = n));
       }
     }
   }
 }
-class _ {
+class d {
   static required(e) {
     return e.length ? null : { required: !0 };
   }
@@ -117,5 +118,5 @@ class _ {
 }
 export {
   h as FormBuilder,
-  _ as Validators
+  d as Validators
 };

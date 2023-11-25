@@ -1,13 +1,25 @@
 declare module "@plumejs/forms" {
+  type InitialValues = Record<
+    string,
+    | string
+    | number
+    | boolean
+    | string[]
+    | [
+        value: string | number | boolean | string[],
+        validators?: Array<(value: string) => boolean>
+      ]
+  >;
   export class FormBuilder {
-    get errors(): Map;
+    constructor(initialValues: InitialValues);
+    get errors(): Map<string, Record<string, string>>;
     get valid(): boolean;
     get value(): Record<string, unknown>;
-    getControl(controlName: string): {
+    getControl(controlName: keyof InitialValues): {
       value: string;
       validators: Array<(value: string) => boolean>;
     };
-    changeHandler(controlName: string): (e: Event) => void;
+    changeHandler(controlName: keyof InitialValues): (e: Event) => void;
     reset(): void;
   }
   export class Validators {

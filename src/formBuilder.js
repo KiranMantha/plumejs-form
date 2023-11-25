@@ -59,6 +59,9 @@ export class FormBuilder {
         validators: val.length > 1 ? val[1] : [],
       };
     }
+    this.changeHandler = this.changeHandler.bind(this);
+    this.getControl = this.getControl.bind(this);
+    this.reset = this.reset.bind(this);
   }
 
   /**
