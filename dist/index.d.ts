@@ -6,7 +6,7 @@ declare module "@plumejs/forms" {
     | boolean
     | string[]
     | [
-        value: string | number | boolean | string[],
+        value: string | number | boolean | string[] | Record<string, unknown>[],
         validators?: Array<(value: string) => boolean>
       ]
   >;
