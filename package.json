@@ -1,6 +1,6 @@
 {
   "name": "@plumejs/forms",
-  "version": "1.0.0",
+  "version": "4.0.2",
   "description": "A dependency free forms library",
   "files": [
     "dist/**/*"
@@ -11,7 +11,10 @@
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "vite build"
+    "build": "rimraf dist && tsc",
+    "patch-update": "npm version patch",
+    "tag": "git push --follow-tags",
+    "tag-release": "npm run patch-update && npm run tag"
   },
   "repository": {
     "type": "git",
@@ -28,6 +31,8 @@
   },
   "homepage": "https://github.com/KiranMantha/plumejs-forms#readme",
   "devDependencies": {
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.2",
     "vite": "^5.0.2"
   }
 }
