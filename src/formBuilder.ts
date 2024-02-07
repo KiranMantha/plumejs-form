@@ -1,5 +1,9 @@
 import { signal } from "@plumejs/core";
 
+function nodeName(elem: Node, name: string) {
+  return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
+}
+
 const _getTargetValue = (target: HTMLElement) => {
   let targetValue;
   switch (target.nodeName && target.nodeName.toLowerCase()) {
@@ -20,7 +24,12 @@ const _getTargetValue = (target: HTMLElement) => {
     }
     case "select": {
       const one = (target as HTMLSelectElement).type === "select-one";
-      const options = Array.from((target as HTMLSelectElement).options);
+      const options = Array.from((target as HTMLSelectElement).options).filter(
+        (option) =>
+          !option.disabled &&
+          (!(option.parentNode as HTMLSelectElement).disabled ||
+            !nodeName(option.parentNode, "optgroup"))
+      );
       const value = [...options]
         .filter((option) => option.selected)
         .map(
