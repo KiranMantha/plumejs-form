@@ -49,6 +49,9 @@ var __values = (this && this.__values) || function(o) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FormBuilder = void 0;
 var core_1 = require("@plumejs/core");
+function nodeName(elem, name) {
+    return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
+}
 var _getTargetValue = function (target) {
     var targetValue;
     switch (target.nodeName && target.nodeName.toLowerCase()) {
@@ -70,7 +73,11 @@ var _getTargetValue = function (target) {
         }
         case "select": {
             var one = target.type === "select-one";
-            var options = Array.from(target.options);
+            var options = Array.from(target.options).filter(function (option) {
+                return !option.disabled &&
+                    (!option.parentNode.disabled ||
+                        !nodeName(option.parentNode, "optgroup"));
+            });
             var value = __spreadArray([], __read(options), false).filter(function (option) { return option.selected; })
                 .map(function (option) {
                 var _a;
