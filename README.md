@@ -1,2 +1,3 @@
 # plumejs-form
-A dependency free forms library
+
+Please visit [wiki](https://github.com/KiranMantha/plumejs-forms/wiki) for documentation.
