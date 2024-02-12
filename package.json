@@ -1,6 +1,6 @@
 {
   "name": "@plumejs/forms",
-  "version": "4.0.2",
+  "version": "4.1.0",
   "description": "Forms library for PlumeJS ecosystem",
   "files": [
     "dist/**/*"
