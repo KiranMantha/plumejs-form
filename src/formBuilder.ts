@@ -116,11 +116,19 @@ export class FormBuilder {
     return this._controls.get(controlName);
   }
 
-  changeHandler(key: string) {
-    return (e: Event) => {
-      const value = _getTargetValue(e.target as HTMLElement);
-      this.getControl(key).value = value;
-      this._errorCount.set(0);
+  register(key: string) {
+    return {
+      attrs: {
+        name: key,
+        value: this.getControl(key).value,
+        onchange: (e: Event) => {
+          const value = _getTargetValue(e.target as HTMLElement);
+          this.getControl(key).value = value;
+        },
+        onblur: () => {
+          this._checkValidity();
+        },
+      },
     };
   }
 

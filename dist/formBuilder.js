@@ -168,12 +168,20 @@ var FormBuilder = /** @class */ (function () {
     FormBuilder.prototype.getControl = function (controlName) {
         return this._controls.get(controlName);
     };
-    FormBuilder.prototype.changeHandler = function (key) {
+    FormBuilder.prototype.register = function (key) {
         var _this = this;
-        return function (e) {
-            var value = _getTargetValue(e.target);
-            _this.getControl(key).value = value;
-            _this._errorCount.set(0);
+        return {
+            attrs: {
+                name: key,
+                value: this.getControl(key).value,
+                onchange: function (e) {
+                    var value = _getTargetValue(e.target);
+                    _this.getControl(key).value = value;
+                },
+                onblur: function () {
+                    _this._checkValidity();
+                },
+            },
         };
     };
     FormBuilder.prototype.reset = function () {
