@@ -16,7 +16,14 @@ export declare class FormBuilder {
         value: unknown;
         validators: ((val: string) => Record<string, boolean>)[];
     };
-    changeHandler(key: string): (e: Event) => void;
+    register(key: string): {
+        attrs: {
+            name: string;
+            value: unknown;
+            onchange: (e: Event) => void;
+            onblur: () => void;
+        };
+    };
     reset(): void;
     private _checkValidity;
 }
