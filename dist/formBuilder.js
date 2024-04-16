@@ -98,6 +98,7 @@ var FormBuilder = /** @class */ (function () {
         var e_1, _a;
         this._controls = new Map();
         this._errors = new Map();
+        this._isSubmitted = false;
         this._errorCount = (0, core_1.signal)(0);
         this._initialValues = initialValues;
         try {
@@ -109,6 +110,7 @@ var FormBuilder = /** @class */ (function () {
                     validators: val.length > 1
                         ? val[1]
                         : [],
+                    isTouched: false,
                 });
             }
         }
@@ -129,7 +131,6 @@ var FormBuilder = /** @class */ (function () {
     });
     Object.defineProperty(FormBuilder.prototype, "errors", {
         get: function () {
-            this._checkValidity();
             return this._errors;
         },
         enumerable: false,
@@ -137,7 +138,6 @@ var FormBuilder = /** @class */ (function () {
     });
     Object.defineProperty(FormBuilder.prototype, "valid", {
         get: function () {
-            this._checkValidity();
             return this._errors.size ? false : true;
         },
         enumerable: false,
@@ -165,6 +165,13 @@ var FormBuilder = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(FormBuilder.prototype, "submitted", {
+        get: function () {
+            return this._isSubmitted;
+        },
+        enumerable: false,
+        configurable: true
+    });
     FormBuilder.prototype.getControl = function (controlName) {
         return this._controls.get(controlName);
     };
@@ -179,10 +186,17 @@ var FormBuilder = /** @class */ (function () {
                     _this.getControl(key).value = value;
                 },
                 onblur: function () {
-                    _this._checkValidity();
+                    _this.getControl(key).isTouched = true;
+                    _this._checkValidity(true);
                 },
             },
         };
+    };
+    FormBuilder.prototype.handleSubmit = function (e, fn) {
+        e.preventDefault();
+        this._isSubmitted = true;
+        this._checkValidity(false);
+        fn(this.value);
     };
     FormBuilder.prototype.reset = function () {
         var e_3, _a;
@@ -191,6 +205,7 @@ var FormBuilder = /** @class */ (function () {
                 var _d = __read(_c.value, 2), key = _d[0], value = _d[1];
                 var val = __spreadArray([], __read((Array.isArray(value) ? value : [value])), false);
                 this._controls.get(key).value = JSON.parse(JSON.stringify(val))[0];
+                this._controls.get(key).isTouched = false;
             }
         }
         catch (e_3_1) { e_3 = { error: e_3_1 }; }
@@ -200,35 +215,39 @@ var FormBuilder = /** @class */ (function () {
             }
             finally { if (e_3) throw e_3.error; }
         }
+        this._isSubmitted = false;
         this._errors.clear();
         this._errorCount.set(0);
     };
-    FormBuilder.prototype._checkValidity = function () {
+    FormBuilder.prototype._checkValidity = function (checkValidationForTouchedElements) {
         var e_4, _a, e_5, _b;
         this._errors.clear();
         try {
             for (var _c = __values(this._controls), _d = _c.next(); !_d.done; _d = _c.next()) {
-                var _e = __read(_d.value, 2), key = _e[0], _f = _e[1], value = _f.value, validators = _f.validators;
-                try {
-                    for (var validators_1 = (e_5 = void 0, __values(validators)), validators_1_1 = validators_1.next(); !validators_1_1.done; validators_1_1 = validators_1.next()) {
-                        var validator = validators_1_1.value;
-                        var validity = validator(value);
-                        if (validity !== null) {
-                            if (this._errors.has(key)) {
-                                this._errors.set(key, __assign(__assign({}, this._errors.get(key)), validity));
-                            }
-                            else {
-                                this._errors.set(key, validity);
+                var _e = __read(_d.value, 2), key = _e[0], _f = _e[1], value = _f.value, validators = _f.validators, isTouched = _f.isTouched;
+                if ((checkValidationForTouchedElements && isTouched) ||
+                    (!checkValidationForTouchedElements && this._isSubmitted)) {
+                    try {
+                        for (var validators_1 = (e_5 = void 0, __values(validators)), validators_1_1 = validators_1.next(); !validators_1_1.done; validators_1_1 = validators_1.next()) {
+                            var validator = validators_1_1.value;
+                            var validity = validator(value);
+                            if (validity !== null) {
+                                if (this._errors.has(key)) {
+                                    this._errors.set(key, __assign(__assign({}, this._errors.get(key)), validity));
+                                }
+                                else {
+                                    this._errors.set(key, validity);
+                                }
                             }
                         }
                     }
-                }
-                catch (e_5_1) { e_5 = { error: e_5_1 }; }
-                finally {
-                    try {
-                        if (validators_1_1 && !validators_1_1.done && (_b = validators_1.return)) _b.call(validators_1);
+                    catch (e_5_1) { e_5 = { error: e_5_1 }; }
+                    finally {
+                        try {
+                            if (validators_1_1 && !validators_1_1.done && (_b = validators_1.return)) _b.call(validators_1);
+                        }
+                        finally { if (e_5) throw e_5.error; }
                     }
-                    finally { if (e_5) throw e_5.error; }
                 }
             }
         }

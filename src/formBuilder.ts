@@ -60,6 +60,11 @@ type InitialValues = Record<
     ]
 >;
 
+export type FormValues = Record<
+  string,
+  string | number | boolean | Array<string | number | Record<string, unknown>>
+>;
+
 export class FormBuilder {
   private _initialValues: InitialValues;
   private _controls: Map<
@@ -67,10 +72,12 @@ export class FormBuilder {
     {
       value: unknown;
       validators: Array<(val: string) => null | Record<string, boolean>>;
+      isTouched: boolean;
     }
   > = new Map();
   private _errors = new Map<string, Record<string, boolean>>();
   private _errorCount;
+  private _isSubmitted = false;
 
   constructor(initialValues: InitialValues) {
     this._errorCount = signal(0);
@@ -83,6 +90,7 @@ export class FormBuilder {
           val.length > 1
             ? (val[1] as Array<(value: string) => Record<string, boolean>>)
             : [],
+        isTouched: false,
       });
     }
   }
@@ -92,24 +100,23 @@ export class FormBuilder {
   }
 
   get errors() {
-    this._checkValidity();
     return this._errors;
   }
 
   get valid() {
-    this._checkValidity();
     return this._errors.size ? false : true;
   }
 
-  get value(): Record<
-    string,
-    string | number | boolean | Array<string | number | Record<string, unknown>>
-  > {
+  get value(): FormValues {
     const values = {};
     for (const [key, value] of this._controls) {
       values[key] = value.value;
     }
     return values;
+  }
+
+  get submitted(): boolean {
+    return this._isSubmitted;
   }
 
   getControl(controlName: string) {
@@ -126,31 +133,46 @@ export class FormBuilder {
           this.getControl(key).value = value;
         },
         onblur: () => {
-          this._checkValidity();
+          this.getControl(key).isTouched = true;
+          this._checkValidity(true);
         },
       },
     };
+  }
+
+  handleSubmit(e: Event, fn: (values: FormValues) => void) {
+    e.preventDefault();
+    this._isSubmitted = true;
+    this._checkValidity(false);
+    fn(this.value);
   }
 
   reset() {
     for (const [key, value] of Object.entries(this._initialValues)) {
       const val = [...(Array.isArray(value) ? value : [value])];
       this._controls.get(key).value = JSON.parse(JSON.stringify(val))[0];
+      this._controls.get(key).isTouched = false;
     }
+    this._isSubmitted = false;
     this._errors.clear();
     this._errorCount.set(0);
   }
 
-  private _checkValidity() {
+  private _checkValidity(checkValidationForTouchedElements: boolean) {
     this._errors.clear();
-    for (const [key, { value, validators }] of this._controls) {
-      for (const validator of validators) {
-        const validity = validator(value as string);
-        if (validity !== null) {
-          if (this._errors.has(key)) {
-            this._errors.set(key, { ...this._errors.get(key), ...validity });
-          } else {
-            this._errors.set(key, validity);
+    for (const [key, { value, validators, isTouched }] of this._controls) {
+      if (
+        (checkValidationForTouchedElements && isTouched) ||
+        (!checkValidationForTouchedElements && this._isSubmitted)
+      ) {
+        for (const validator of validators) {
+          const validity = validator(value as string);
+          if (validity !== null) {
+            if (this._errors.has(key)) {
+              this._errors.set(key, { ...this._errors.get(key), ...validity });
+            } else {
+              this._errors.set(key, validity);
+            }
           }
         }
       }
