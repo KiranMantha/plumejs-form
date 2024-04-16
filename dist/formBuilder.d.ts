@@ -2,19 +2,23 @@ type InitialValues = Record<string, string | number | boolean | string[] | [
     value: string | number | boolean | string[] | Record<string, unknown>[],
     validators?: Array<(value: string) => null | Record<string, boolean>>
 ]>;
+export type FormValues = Record<string, string | number | boolean | Array<string | number | Record<string, unknown>>>;
 export declare class FormBuilder {
     private _initialValues;
     private _controls;
     private _errors;
     private _errorCount;
+    private _isSubmitted;
     constructor(initialValues: InitialValues);
     get hasErrors(): boolean;
     get errors(): Map<string, Record<string, boolean>>;
     get valid(): boolean;
-    get value(): Record<string, string | number | boolean | Array<string | number | Record<string, unknown>>>;
+    get value(): FormValues;
+    get submitted(): boolean;
     getControl(controlName: string): {
         value: unknown;
         validators: ((val: string) => Record<string, boolean>)[];
+        isTouched: boolean;
     };
     register(key: string): {
         attrs: {
@@ -24,6 +28,7 @@ export declare class FormBuilder {
             onblur: () => void;
         };
     };
+    handleSubmit(e: Event, fn: (values: FormValues) => void): void;
     reset(): void;
     private _checkValidity;
 }
