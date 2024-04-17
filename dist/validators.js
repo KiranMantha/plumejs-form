@@ -9,16 +9,12 @@ var Validators = /** @class */ (function () {
     };
     Validators.min = function (length) {
         return function (value) {
-            return value.length >= length
-                ? null
-                : { minLength: { requiredLength: length } };
+            return value.length >= length ? null : { minLength: { requiredLength: length } };
         };
     };
     Validators.max = function (length) {
         return function (value) {
-            return value.length <= length
-                ? null
-                : { maxLength: { requiredLength: length } };
+            return value.length <= length ? null : { maxLength: { requiredLength: length } };
         };
     };
     Validators.pattern = function (expression) {
