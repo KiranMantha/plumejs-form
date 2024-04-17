@@ -1,6 +1,6 @@
 {
   "name": "@plumejs/forms",
-  "version": "4.1.3",
+  "version": "4.1.4",
   "description": "Forms library for PlumeJS ecosystem",
   "main": "dist/index.js",
   "module": "dist/index.js",
