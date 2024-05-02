@@ -12,9 +12,7 @@ export class FieldArray {
 
   constructor(itemCollection: Array<Record<string, InitialValueType>>) {
     this._initialCollection = itemCollection;
-    const controls = itemCollection.map((item) => {
-      return this._generateControls(item);
-    });
+    const controls = this._generateControls(itemCollection);
     this._controls.set(controls);
   }
 
@@ -34,7 +32,7 @@ export class FieldArray {
   }
 
   append(newItem: Record<string, InitialValueType>) {
-    this._controls.set((prevValue) => [...prevValue, this._generateControls(newItem)]);
+    this._controls.set((prevValue) => [...prevValue, this._generateItemControls(newItem)]);
   }
 
   remove(index: number) {
@@ -61,7 +59,19 @@ export class FieldArray {
       : null;
   }
 
-  private _generateControls(item: Record<string, InitialValueType>) {
+  reset() {
+    const controls = this._generateControls(this._initialCollection);
+    this.validity = null;
+    this._controls.set(controls);
+  }
+
+  private _generateControls(collection: Array<Record<string, InitialValueType>>) {
+    return collection.map((item) => {
+      return this._generateItemControls(item);
+    });
+  }
+
+  private _generateItemControls(item: Record<string, InitialValueType>) {
     const items = [];
     const token = createToken();
     for (const [key, value] of Object.entries(item)) {
