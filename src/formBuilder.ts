@@ -62,19 +62,12 @@ export class FormBuilder {
   }
 
   reset() {
-    // for (const [key, value] of Object.entries(this._initialValues)) {
-    //   const val = [...(Array.isArray(value) ? value : [value])];
-    //   const { validators } = this._controls.get(key);
-    //   this._controls.set(key, {
-    //     value: JSON.parse(JSON.stringify(val))[0],
-    //     validators,
-    //     isTouched: false,
-    //     errorMessage: ''
-    //   });
-    // }
-    // this._isSubmitted = false;
-    // this._errors.clear();
-    // this._errorCount.set(0);
+    this._controls.forEach((ctrl) => {
+      ctrl.reset();
+    });
+    this._isSubmitted = false;
+    this._errors.clear();
+    this._errorCount = 0;
   }
 
   private _setError(key: string, validity: Record<string, boolean>) {

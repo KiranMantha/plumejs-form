@@ -47,11 +47,12 @@ const _getTargetValue = (target: HTMLElement) => {
 
 export class FormControl {
   name: string;
-  value: any;
   validators: Array<ValidatorFn | ValidatorObj>;
   isTouched = false;
   validity = null;
 
+  private _initialValue: any;
+  private _value: any;
   private _errorMessage = signal('');
   private _parent: { setError: (controlName: string, validity: Record<string, boolean> | null) => void } | null = null;
 
@@ -62,7 +63,8 @@ export class FormControl {
   ) {
     const val = [...(Array.isArray(controlValue) ? controlValue : [controlValue])];
     this.name = name;
-    this.value = val[0];
+    this._initialValue = val[0];
+    this._value = val[0];
     this.validators = val.length > 1 ? (val[1] as Array<ValidatorFn | ValidatorObj>) : [];
     this._parent = parent;
   }
@@ -71,13 +73,17 @@ export class FormControl {
     return this._errorMessage();
   }
 
+  get value() {
+    return this._value;
+  }
+
   register() {
     return {
       attrs: {
         name: this.name,
         value: this.value,
         onchange: (e) => {
-          this.value = _getTargetValue(e.target);
+          this._value = _getTargetValue(e.target);
         },
         onblur: () => {
           this.isTouched = true;
@@ -100,5 +106,12 @@ export class FormControl {
       }
     }
     this._errorMessage.set(errorMessage);
+  }
+
+  reset() {
+    this._value = this._initialValue;
+    this.isTouched = false;
+    this.validity = null;
+    this._errorMessage.set('');
   }
 }
