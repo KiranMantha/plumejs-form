@@ -4,6 +4,9 @@
     "outDir": "dist",
     "declaration": true,
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "emitDeclarationOnly": true
   }
 }

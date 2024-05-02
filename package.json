@@ -19,7 +19,8 @@
   },
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "rimraf dist && tsc",
+    "build:types": "rimraf dist && tsc",
+    "build": "npm run build:types && vite build",
     "patch-update": "npm version patch",
     "tag": "git push --follow-tags",
     "tag-release": "npm run patch-update && npm run tag",
@@ -40,12 +41,14 @@
   },
   "homepage": "https://github.com/KiranMantha/plumejs-forms#readme",
   "dependencies": {
-    "@plumejs/core": "^4.1.6"
+    "@plumejs/core": "^4.1.8"
   },
   "devDependencies": {
     "rimraf": "^5.0.5",
     "skott": "^0.33.2",
     "typescript": "^5.4.5",
-    "vite": "^5.2.8"
+    "vite": "^5.2.10",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-externalize-deps": "^0.8.0"
   }
 }
