@@ -1,16 +1,18 @@
 import { InitialValueType, ValidatorFn, ValidatorObj } from './model';
 export declare class FormControl {
     name: string;
-    value: any;
     validators: Array<ValidatorFn | ValidatorObj>;
     isTouched: boolean;
     validity: any;
+    private _initialValue;
+    private _value;
     private _errorMessage;
     private _parent;
     constructor(name: string, controlValue: InitialValueType, parent?: {
         setError: (controlName: string, validity: Record<string, boolean> | null) => void;
     } | null);
     get errorMessage(): string;
+    get value(): any;
     register(): {
         attrs: {
             name: string;
@@ -20,4 +22,5 @@ export declare class FormControl {
         };
     };
     validate(): void;
+    reset(): void;
 }

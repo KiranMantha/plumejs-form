@@ -14,5 +14,7 @@ export declare class FieldArray {
     append(newItem: Record<string, InitialValueType>): void;
     remove(index: number): void;
     validate(): void;
+    reset(): void;
     private _generateControls;
+    private _generateItemControls;
 }

@@ -1,5 +1,5 @@
 import { signal as l } from "@plumejs/core";
-const i = (s) => typeof s == "function", h = (s, e) => s.nodeName && s.nodeName.toLowerCase() === e.toLowerCase(), c = (s) => {
+const n = (s) => typeof s == "function", h = (s, e) => s.nodeName && s.nodeName.toLowerCase() === e.toLowerCase(), c = (s) => {
   let e;
   switch (s.nodeName && s.nodeName.toLowerCase()) {
     case "input":
@@ -8,10 +8,10 @@ const i = (s) => typeof s == "function", h = (s, e) => s.nodeName && s.nodeName.
       break;
     }
     case "select": {
-      const t = s.type === "select-one", o = [...Array.from(s.options).filter(
-        (n) => !n.disabled && (!n.parentNode.disabled || !h(n.parentNode, "optgroup"))
-      )].filter((n) => n.selected).map((n) => n.value ?? (n.textContent.match(/[^\x20\t\r\n\f]+/g) || []).join(" "));
-      e = t ? o[0] : o;
+      const t = s.type === "select-one", i = [...Array.from(s.options).filter(
+        (o) => !o.disabled && (!o.parentNode.disabled || !h(o.parentNode, "optgroup"))
+      )].filter((o) => o.selected).map((o) => o.value ?? (o.textContent.match(/[^\x20\t\r\n\f]+/g) || []).join(" "));
+      e = t ? i[0] : i;
       break;
     }
     default: {
@@ -24,11 +24,14 @@ const i = (s) => typeof s == "function", h = (s, e) => s.nodeName && s.nodeName.
 class a {
   constructor(e, t, r) {
     this.isTouched = !1, this.validity = null, this._errorMessage = l(""), this._parent = null;
-    const o = [...Array.isArray(t) ? t : [t]];
-    this.name = e, this.value = o[0], this.validators = o.length > 1 ? o[1] : [], this._parent = r;
+    const i = [...Array.isArray(t) ? t : [t]];
+    this.name = e, this._initialValue = i[0], this._value = i[0], this.validators = i.length > 1 ? i[1] : [], this._parent = r;
   }
   get errorMessage() {
     return this._errorMessage();
+  }
+  get value() {
+    return this._value;
   }
   register() {
     return {
@@ -36,7 +39,7 @@ class a {
         name: this.name,
         value: this.value,
         onchange: (e) => {
-          this.value = c(e.target);
+          this._value = c(e.target);
         },
         onblur: () => {
           this.isTouched = !0, this.validate();
@@ -48,25 +51,28 @@ class a {
     var t;
     let e = "";
     for (const r of this.validators)
-      if (this.validity = i(r) ? r(this.value) : r.rule(this.value), this.validity !== null) {
-        e = i(r) ? "error" : r.message, (t = this._parent) == null || t.setError(this.name, this.validity);
+      if (this.validity = n(r) ? r(this.value) : r.rule(this.value), this.validity !== null) {
+        e = n(r) ? "error" : r.message, (t = this._parent) == null || t.setError(this.name, this.validity);
         break;
       }
     this._errorMessage.set(e);
+  }
+  reset() {
+    this._value = this._initialValue, this.isTouched = !1, this.validity = null, this._errorMessage.set("");
   }
 }
 const d = () => Math.random().toString(36).substring(2);
 class _ {
   constructor(e) {
     this._controls = l([]), this.validity = null, this._initialCollection = e;
-    const t = e.map((r) => this._generateControls(r));
+    const t = this._generateControls(e);
     this._controls.set(t);
   }
   get value() {
     return this.controls.map((t) => {
       const r = {};
-      for (const o of t)
-        r[o.name] = o.control.value;
+      for (const i of t)
+        r[i.name] = i.control.value;
       return r;
     });
   }
@@ -74,7 +80,7 @@ class _ {
     return [...this._controls()];
   }
   append(e) {
-    this._controls.set((t) => [...t, this._generateControls(e)]);
+    this._controls.set((t) => [...t, this._generateItemControls(e)]);
   }
   remove(e) {
     const t = [...this.controls];
@@ -82,9 +88,9 @@ class _ {
   }
   validate() {
     const e = this.controls.flatMap((t) => {
-      const r = t.filter(({ control: o }) => {
-        if (o.validate(), o.errorMessage)
-          return o.errorMessage;
+      const r = t.filter(({ control: i }) => {
+        if (i.validate(), i.errorMessage)
+          return i.errorMessage;
       });
       if (r.length)
         return r;
@@ -93,13 +99,20 @@ class _ {
       invalid: !0
     } : null;
   }
+  reset() {
+    const e = this._generateControls(this._initialCollection);
+    this.validity = null, this._controls.set(e);
+  }
   _generateControls(e) {
+    return e.map((t) => this._generateItemControls(t));
+  }
+  _generateItemControls(e) {
     const t = [], r = d();
-    for (const [o, n] of Object.entries(e)) {
+    for (const [i, o] of Object.entries(e)) {
       const u = {
-        name: o,
-        control: new a(`${o}-${r}`, n),
-        indexedName: `${o}-${r}`
+        name: i,
+        control: new a(`${i}-${r}`, o),
+        indexedName: `${i}-${r}`
       };
       t.push(u);
     }
@@ -140,6 +153,9 @@ class g {
     e.preventDefault(), this._isSubmitted = !0, this._checkValidity(), t(this.value);
   }
   reset() {
+    this._controls.forEach((e) => {
+      e.reset();
+    }), this._isSubmitted = !1, this._errors.clear(), this._errorCount = 0;
   }
   _setError(e, t) {
     t ? this._errors.set(e, t) : this._errors.delete(e), this._errorCount = this._errors.size;
