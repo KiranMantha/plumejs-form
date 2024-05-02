@@ -1,16 +1,26 @@
-import path from "path";
+import path from 'path';
+import { defineConfig } from 'vite';
+import viteCompression from 'vite-plugin-compression';
+import { externalizeDeps } from 'vite-plugin-externalize-deps';
 
-import { defineConfig } from "vite";
 export default defineConfig({
+  base: './',
+  plugins: [
+    externalizeDeps(),
+    viteCompression({
+      algorithm: 'brotliCompress',
+      ext: '.br'
+    })
+  ],
   build: {
-    outDir: "dist",
+    outDir: 'dist',
+    emptyOutDir: false,
     sourcemap: false,
-    minify: "esbuild",
     lib: {
-      entry: path.resolve(__dirname, "src/index.js"),
-      name: "PlumeJS-Forms",
-      fileName: () => "index.js",
-      formats: ["es"],
-    },
-  },
+      entry: path.resolve(__dirname, 'src/index.ts'),
+      name: 'PlumeJS-Router',
+      fileName: 'index',
+      formats: ['es']
+    }
+  }
 });
