@@ -1,13 +1,7 @@
-type InitialValues = Record<string, string | number | boolean | string[] | [
-    value: string | number | boolean | string[] | Record<string, unknown>[],
-    validators?: Array<ValidatorFn | ValidatorObj>
-]>;
-type ValidatorFn = (val: string) => null | Record<string, boolean>;
-type ValidatorObj = {
-    rule: ValidatorFn;
-    message?: string;
-};
-export type FormValues = Record<string, string | number | boolean | Array<string | number | Record<string, unknown>>>;
+import { FieldArray } from './fieldArray';
+import { FormControl } from './formControl';
+import { FormValues, InitialValueType } from './model';
+type InitialValues = Record<string, InitialValueType | FieldArray>;
 export declare class FormBuilder {
     private _initialValues;
     private _controls;
@@ -20,22 +14,18 @@ export declare class FormBuilder {
     get valid(): boolean;
     get value(): FormValues;
     get submitted(): boolean;
-    getControl(controlName: string): {
-        value: unknown;
-        validators: (ValidatorFn | ValidatorObj)[];
-        isTouched: boolean;
-        errorMessage: string;
-    };
+    getControl(controlName: string): FormControl | FieldArray;
     register(key: string): {
         attrs: {
             name: string;
-            value: unknown;
-            onchange: (e: Event) => void;
+            value: any;
+            onchange: (e: any) => void;
             onblur: () => void;
         };
     };
     handleSubmit(e: Event, fn: (values: FormValues) => void): void;
     reset(): void;
+    private _setError;
     private _checkValidity;
     private _executeValidators;
 }
