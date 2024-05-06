@@ -9,4 +9,8 @@
 [![GitHub watchers badge](https://img.shields.io/github/watchers/kiranmantha/plumejs-forms?style=social)](https://github.com/kiranmantha/plumejs-forms/watchers)
 [![GitHub stars badge](https://img.shields.io/github/stars/kiranmantha/plumejs-forms.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/kiranmantha/plumejs-forms/stargazers/)
 
-**PlumeJS Forms** is a scoped package in PlumeJS Ecosystem that provisioned forms creation at ease. For more info please visit [wiki](https://github.com/KiranMantha/plumejs-forms/wiki) for documentation.
+**PlumeJS Forms** is a scoped package in PlumeJS Ecosystem that provisioned forms creation at ease.
+
+## Documentation
+
+For documentation, please visit [wiki](https://github.com/KiranMantha/plumejs-forms/wiki).
