@@ -4,7 +4,7 @@
 
 [![NPM version badge](https://img.shields.io/npm/v/@plumejs/forms)](https://www.npmjs.com/package/@plumejs/forms)
 [![NPM downloads badge](https://img.shields.io/npm/dw/%40plumejs/forms?color=blue)](https://www.npmjs.com/package/@plumejs/forms)
-![Library dependents badge](https://img.shields.io/librariesio/dependents/npm/%40plumejs/forms?color=blue)
+[![Dependencies](https://img.shields.io/badge/Dependencies-%40plumejs%2Fcore-green)](https://GitHub.com/KiranMantha/plumejs)
 
 [![GitHub watchers badge](https://img.shields.io/github/watchers/kiranmantha/plumejs-forms?style=social)](https://github.com/kiranmantha/plumejs-forms/watchers)
 [![GitHub stars badge](https://img.shields.io/github/stars/kiranmantha/plumejs-forms.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/kiranmantha/plumejs-forms/stargazers/)
