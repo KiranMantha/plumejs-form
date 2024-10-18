@@ -5,14 +5,12 @@ import { FormValues, InitialValueType } from './model';
 type InitialValues = Record<string, InitialValueType | FieldArray>;
 
 export class FormBuilder {
-  private _initialValues: InitialValues;
   private _controls: Map<string, FormControl | FieldArray> = new Map();
   private _errors = new Map<string, Record<string, boolean>>();
   private _errorCount = 0;
   private _isSubmitted = false;
 
   constructor(initialValues: InitialValues) {
-    this._initialValues = initialValues;
     for (const [key, value] of Object.entries(initialValues)) {
       if (value instanceof FieldArray) {
         this._controls.set(key, value);
@@ -36,9 +34,9 @@ export class FormBuilder {
 
   get value(): FormValues {
     const values = {};
-    for (const [key, value] of this._controls) {
-      values[key] = value.value;
-    }
+    this._controls.forEach((control, key) => {
+      values[key] = control.value;
+    });
     return values;
   }
 
@@ -62,8 +60,8 @@ export class FormBuilder {
   }
 
   reset() {
-    this._controls.forEach((ctrl) => {
-      ctrl.reset();
+    this._controls.forEach((control) => {
+      control.reset();
     });
     this._isSubmitted = false;
     this._errors.clear();

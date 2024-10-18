@@ -121,7 +121,7 @@ class _ {
 }
 class g {
   constructor(e) {
-    this._controls = /* @__PURE__ */ new Map(), this._errors = /* @__PURE__ */ new Map(), this._errorCount = 0, this._isSubmitted = !1, this._initialValues = e;
+    this._controls = /* @__PURE__ */ new Map(), this._errors = /* @__PURE__ */ new Map(), this._errorCount = 0, this._isSubmitted = !1;
     for (const [t, r] of Object.entries(e))
       r instanceof _ ? this._controls.set(t, r) : this._controls.set(t, new a(t, r, { setError: this._setError.bind(this) }));
   }
@@ -136,9 +136,9 @@ class g {
   }
   get value() {
     const e = {};
-    for (const [t, r] of this._controls)
-      e[t] = r.value;
-    return e;
+    return this._controls.forEach((t, r) => {
+      e[r] = t.value;
+    }), e;
   }
   get submitted() {
     return this._isSubmitted;

@@ -3,7 +3,6 @@ import { FormControl } from './formControl';
 import { FormValues, InitialValueType } from './model';
 type InitialValues = Record<string, InitialValueType | FieldArray>;
 export declare class FormBuilder {
-    private _initialValues;
     private _controls;
     private _errors;
     private _errorCount;
